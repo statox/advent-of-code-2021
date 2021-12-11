@@ -1,0 +1,10 @@
+{
+  "name": "day11",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx light-server -s . -w \"**/*\""
+  },
+  "devDependencies": {
+    "light-server": "^2.8.0"
+  }
+}
