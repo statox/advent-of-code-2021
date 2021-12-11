@@ -17,11 +17,15 @@
         -webkit-box-align: center;
         -ms-flex-align: center;
         align-items: center;
-        background: #1a1e1d
+        background: #1a1e1d;
     }
 
     p {
-        color: #c9e1e1
+        color: #c9e1e1;
+    }
+
+    #loopSpan {
+        color: red;
     }
 </style>
 
@@ -31,6 +35,8 @@
 <body>
     <div id="canvasDiv">
         <p>Step: <span id="stepSpan"></span> Flashes: <span id="flashesSpan"></span></p>
+        <p><span id="loopSpan"></span></p>
+        <p><span id="noLoopSpan">No loop detected for now</span></p>
         <p><span id="part1Span">Part 1: Computing...</span></p>
         <p><span id="part2Span">Part 2: Computing...</span></p>
     </div>

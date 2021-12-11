@@ -7,17 +7,35 @@ let stepCount;
 let lastTick;
 let part2Found;
 const D = 700;
+let pastConfigurations;
 
 function preload() {
     input = loadStrings('./input');
 }
 
+function bigRandomGrid(size) {
+    pastConfigurations = new Set();
+    const g = [];
+    for (let y = 0; y < size; y++) {
+        g.push([]);
+        for (let x = 0; x < size; x++) {
+            g[y].push(random(0, 9));
+        }
+    }
+    return g;
+}
+
 function setup() {
+    pastConfigurations = new Set();
+    // Use this line to solve the actual problem
+    // grid = input.filter((l) => l.length).map((l) => l.split('').map(Number));
+    // Use this line to make something "beautiful"
+    grid = bigRandomGrid(100);
+
     lastTick = millis();
     flashesCount = 0;
     part2Found = false;
     stepCount = 0;
-    grid = input.filter((l) => l.length).map((l) => l.split('').map(Number));
     scaleY = D / grid.length;
     scaleX = D / grid[0].length;
 
@@ -28,7 +46,8 @@ function setup() {
 
 function colorByFlashLevel(level) {
     if (level === 0) {
-        return '#f9dc00';
+        // return '#f9dc00';
+        return '#fff9cc';
     }
     return map(level, 1, 9, 0, 205);
 }
@@ -37,6 +56,7 @@ function draw() {
     background(10);
 
     doUpdate();
+    checkLoop();
     for (let y = 0; y < grid.length; y++) {
         for (let x = 0; x < grid[y].length; x++) {
             const c = colorByFlashLevel(grid[y][x]);
@@ -48,13 +68,29 @@ function draw() {
 
 const xyToStr = (x, y) => `${x};${y}`;
 
+function checkLoop() {
+    const gridAsStr = grid.join(',');
+    if (pastConfigurations.has(gridAsStr)) {
+        document.getElementById('noLoopSpan').innerText = '';
+        document.getElementById('loopSpan').innerText = 'LOOP DETECTED';
+        setTimeout(() => {
+            document.getElementById('noLoopSpan').innerText = 'No loop detected for now';
+            document.getElementById('loopSpan').innerText = '';
+            stepCount = 0;
+            flashesCount = 0;
+            grid = bigRandomGrid(100);
+        }, 3000);
+    }
+    pastConfigurations.add(gridAsStr);
+}
+
 function doUpdate() {
     if (stepCount === 100) {
         console.log('Part1', flashesCount);
         document.getElementById('part1Span').innerText = `Part 1: ${flashesCount} flashes after 100 steps`;
     }
 
-    if (millis() > lastTick + 100) {
+    if (millis() > lastTick + 1) {
         lastTick = millis();
         stepCount++;
         flashesCount += doStep(grid);
